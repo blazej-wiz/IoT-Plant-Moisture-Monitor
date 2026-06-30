@@ -1,50 +1,65 @@
-# Welcome to your Expo app 👋
+## MSc Computer Science Final Project
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+My App is an Internet of Things (IoT) plant monitoring system designed to help users monitor the health of their houseplants through a combination of embedded hardware, a mobile application, and cloud technologies.
 
-## Get started
+The project aims to provide an end-to-end software engineering solution by combining mobile development, embedded systems, networking, cloud computing, databases, and backend development into a single cohesive application.
 
-1. Install dependencies
+## Project Overview
 
-   ```bash
-   npm install
-   ```
+A moisture sensor connected to an ESP32-C6 microcontroller will periodically measure the soil moisture level of a plant. To maximise battery life, the device will spend most of its time in deep sleep and wake at scheduled intervals to collect sensor readings.
 
-2. Start the app
+Users will pair the ESP32 device with the mobile application using Bluetooth Low Energy (BLE). During the initial setup, the mobile application will provision the device with the user's Wi-Fi credentials, allowing the sensor to upload future readings directly to the cloud without requiring the phone to remain connected.
 
-   ```bash
-   npx expo start
-   ```
+The mobile application will allow users to:
 
-In the output, you'll find options to open the app in a
+- Register and manage multiple plants
+- Pair and manage multiple moisture sensors
+- View live and historical moisture readings
+- Receive plant-specific watering advice
+- Monitor plant health through graphs and analytics
+- Configure device and notification settings
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Proposed Technologies
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Mobile
 
-## Get a fresh project
+- React Native
+- Expo
+- TypeScript
 
-When you're ready, run:
+### Embedded Hardware
 
-```bash
-npm run reset-project
-```
+- ESP32-C6
+- Capacitive Soil Moisture Sensor
+- Bluetooth Low Energy (BLE)
+- Wi-Fi
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Backend (Proposed)
 
-## Learn more
+One of the following architectures will be selected during development:
 
-To learn more about developing your project with Expo, look at the following resources:
+- Supabase
+- FastAPI + PostgreSQL
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Cloud
 
-## Join the community
+The backend will be deployed to a cloud platform, allowing sensor data to be securely stored and accessed remotely.
 
-Join our community of developers creating universal apps.
+## Learning Objectives
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project aims to develop practical experience in:
+
+- Mobile application development
+- Internet of Things (IoT)
+- Embedded programming
+- Bluetooth Low Energy (BLE)
+- REST API development
+- Database design
+- Cloud deployment
+- Software architecture
+- Authentication and security
+- Full-stack software engineering
+
+## Current Status
+
+🚧 Project currently in the planning and architecture phase.
