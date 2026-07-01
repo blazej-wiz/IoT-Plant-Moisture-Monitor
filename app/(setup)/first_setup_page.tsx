@@ -1,15 +1,22 @@
 import { Image } from "expo-image";
+import { Link } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import Animated, { FadeIn } from "react-native-reanimated";
 
 export default function Index() {
   return (
+
+    <Animated.View
+      entering={FadeIn.duration(500)}
+      style={styles.container}
+    >
+
     <View
       style={styles.container}>
         <Image
       style={styles.image}
       source={require('../../assets/images/setup_planty.png')}
       contentFit="contain"
-      transition={1000}
       />
 
       <Text style={[styles.text, styles.title]}>Setup Your Garden</Text>
@@ -38,10 +45,13 @@ export default function Index() {
       
       
     </View>
+    <Link href={"/second_sensor_search"} asChild>
     <Pressable style={styles.button}>
         <Text style={styles.buttonText}>Add Sensor</Text>
       </Pressable>
+      </Link>
    </View>
+   </Animated.View>
   );
 }
 
