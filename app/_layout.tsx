@@ -1,8 +1,7 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { LogBox } from "react-native";
 
-LogBox.ignoreAllLogs(true);
+
 
 export default function RootLayout() {
   return (
@@ -12,11 +11,9 @@ export default function RootLayout() {
 
 
   <Stack>
-    <Stack.Screen name="(tabs)" options={{
-      headerShown: false,
-    }}/>
-
-
+    <Stack.Screen name="index" options={{headerShown: false,}}/>
+    <Stack.Screen name="(setup)" options={{headerShown: false,}}/>
+    <Stack.Screen name="(tabs)" options={{headerShown: false,}}/>
   </Stack>
   </>
   );
