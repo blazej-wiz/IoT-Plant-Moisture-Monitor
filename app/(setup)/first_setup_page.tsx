@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    fontSize: 20,
+    fontSize: 18,
     color: '#ffffff',
     fontWeight: '500'
   },
@@ -86,16 +86,16 @@ const styles = StyleSheet.create({
   title:{
     fontSize: 20,
     fontWeight: '700',
-    marginBottom: 10,
+    marginBottom: 20,
   },
 
   subtitle:{
     fontSize: 14,
     fontWeight: '500',
-    marginBottom: 10,
+    marginBottom: 5,
     width: '80%',
     maxWidth: 225,
-    marginRight: -40,
+    marginRight: -20,
     alignSelf: 'center',
   },
 
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 27,
     height: 27,
-    marginRight: 5,
+    marginRight: 10,
     marginBottom: 10,
 },
 
