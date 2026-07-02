@@ -21,16 +21,21 @@ export default function Index() {
         <Ripple delay={400} />
         <Ripple delay={800} />
       
-
       <View style={styles.centerDot} />
       </View>
 
     <Text style={[styles.text, styles.subtitle]}>Make sure your sensor is in pairing mode and close to your phone.</Text>
     
       
-    <Link href={"/second_sensor_search"} asChild>
+    <Link href={"/first_setup_page"} asChild>
     <Pressable style={styles.button}>
         <Text style={styles.buttonText}>Cancel</Text>
+      </Pressable>
+      </Link>
+
+      <Link href={"/third_sensor_found"} asChild>
+    <Pressable style={styles.button}>
+        <Text style={styles.buttonText}>Next page</Text>
       </Pressable>
       </Link>
    </View>
@@ -53,7 +58,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 30,
     outlineStyle: 'solid',
     outlineColor: '#234409',
     outlineWidth: 1,
@@ -72,14 +77,14 @@ const styles = StyleSheet.create({
   title:{
     fontSize: 20,
     fontWeight: '700',
-    marginBottom: 100,
+    marginBottom: 30,
     maxWidth: 175,
     textAlign: 'center',
   },
 
   subtitle:{
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: '600',
     marginBottom: 5,
     marginTop: 10,
     width: '80%',
