@@ -1,5 +1,6 @@
 import { Image } from "expo-image";
 import { StyleSheet, Text, View } from "react-native";
+import { SensorCard } from "../../components/setup/sensorcard";
 
 export default function Index() {
   return (
@@ -11,11 +12,16 @@ export default function Index() {
               source={require('../../assets/images/tick.png')}
               contentFit="contain"
               />
-
-
         <Text style={[styles.title]}>Sensor Found!</Text>
 
         <Text style={[styles.text, styles.subtitle]}>Select your sensor to connect.</Text>
+
+
+        <SensorCard
+         name="Sensor 1"
+         link="/four_connecting"
+         signal='Strong'
+         />
 
         
         </View>
@@ -32,24 +38,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  button:{
-    backgroundColor: '#ffffff',
-    width: 200,
-    height: 40,
-    borderRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 30,
-    outlineStyle: 'solid',
-    outlineColor: '#234409',
-    outlineWidth: 1,
-  },
-
-  buttonText: {
-    fontSize: 18,
-    color: '#234409',
-    fontWeight: '500'
-  },
+  
 
   text:{
     color: '#707B81',
@@ -67,8 +56,9 @@ const styles = StyleSheet.create({
   subtitle:{
     fontSize: 14,
     fontWeight: '600',
-    marginBottom: 5,
-    marginTop: 0,
+    marginBottom: 17,
+
+     
     width: '80%',
     maxWidth: 250,
     textAlign: 'center',
