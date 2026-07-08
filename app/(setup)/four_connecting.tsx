@@ -1,59 +1,44 @@
 import { Image } from "expo-image";
-import { Link } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import Animated, { FadeIn } from "react-native-reanimated";
+
+
 
 export default function Index() {
+  const {name, signal} = useLocalSearchParams<{
+    name: string,
+    signal: string,
+  }>();
+
   return (
-
-    <Animated.View
-      entering={FadeIn.duration(500)}
-      style={styles.container}
-    >
-
-    <View
-      style={styles.container}>
-        <Image
-      style={styles.image}
-      source={require('../../assets/images/setup_planty.png')}
-      contentFit="contain"
-      />
-
-      <Text style={[styles.text, styles.title]}>Fourth page</Text>
     
+    <View style={styles.container}>
 
-    <View style={styles.instructionRow}>
-
-        <Image
-      style={styles.icon}
-      source={require('../../assets/images/button press.png')}
-      contentFit="contain"
-      />
-
-      <Text style={[styles.text, styles.subtitle]}>Hold the button on your sensor for 3 seconds.</Text>
-    </View>
-
-    <View style={styles.instructionRow}>
 
         <Image
-      style={styles.icon}
-      source={require('../../assets/images/light icon.png')}
-      contentFit="contain"
-      />
+              style={styles.image}
+              source={require('../../assets/images/wifii.png')}
+              contentFit="contain"
+              />
+        <Text style={[styles.title]}>Connecting to {name}</Text>
 
-      <Text style={[styles.text, styles.subtitle]}>The light will start blinking when its ready to connect.</Text>
-      
-      
-    </View>
-    <Link href={"/second_sensor_search"} asChild>
-    <Pressable style={styles.button}>
-        <Text style={styles.buttonText}>Add Sensor</Text>
-      </Pressable>
-      </Link>
-   </View>
-   </Animated.View>
+        <Text style={[styles.text, styles.subtitle]}>Please wait while we establish a secure connection.</Text>
+
+        
+            
+        <Link href={"/five_wifi_select"} asChild>
+            <Pressable>
+                <Text>Next page</Text>
+              </Pressable>
+              </Link>
+         
+
+        
+        </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -63,48 +48,38 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  button:{
-    backgroundColor: '#1F4E20',
-    width: 200,
-    height: 40,
-    borderRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
-  },
-
-  buttonText: {
-    fontSize: 20,
-    color: '#ffffff',
-    fontWeight: '500'
-  },
+  
 
   text:{
     color: '#707B81',
   },
 
   title:{
-    fontSize: 20,
+    fontSize: 26,
     fontWeight: '700',
-    marginBottom: 10,
+    marginBottom: 17,
+    maxWidth: 200,
+    textAlign: 'center',
+    color: '#006838',
   },
 
   subtitle:{
     fontSize: 14,
-    fontWeight: '500',
-    marginBottom: 10,
+    fontWeight: '600',
+    marginBottom: 17,
+
+     
     width: '80%',
-    maxWidth: 225,
-    marginRight: -40,
-    alignSelf: 'center',
+    maxWidth: 250,
+    textAlign: 'center',
   },
 
 
   image: {
-    width: 250,
-    height: 250,
-    marginBottom: 15,
-    marginTop: -50,
+    width: 70,
+    height: 70,
+    marginBottom: 17,
+    marginTop: -200,
   },
 
   instructionRow: {
@@ -116,8 +91,23 @@ const styles = StyleSheet.create({
   icon: {
     width: 27,
     height: 27,
-    marginRight: 5,
+    marginRight: 10,
     marginBottom: 10,
 },
+
+  wrapper:{
+    width: 220,
+    height: 220,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  centerDot: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    backgroundColor: "#dfe9df",
+    opacity: 1,
+  }
 
 });

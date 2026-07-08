@@ -1,9 +1,18 @@
 import { Image } from "expo-image";
+import { useLocalSearchParams } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
+import Animated, { FadeInDown } from "react-native-reanimated";
 import { SensorCard } from "../../components/setup/sensorcard";
 
+
 export default function Index() {
+  const {name, signal} = useLocalSearchParams<{
+    name: string,
+    signal: string,
+  }>();
+
   return (
+    
     <View style={styles.container}>
 
 
@@ -16,13 +25,30 @@ export default function Index() {
 
         <Text style={[styles.text, styles.subtitle]}>Select your sensor to connect.</Text>
 
-
+        <Animated.View
+              entering={FadeInDown.duration(700)}
+            >
         <SensorCard
-         name="Sensor 1"
-         link="/four_connecting"
-         signal='Strong'
+         name= {name}
+         link={{pathname: "/four_connecting",
+          params: {
+            name: 'GrowSense Sensor'
+          }
+         }}
+         signal={signal}
          />
-
+         </Animated.View>
+{/* export function mockData() {
+    return (
+    router.push({
+        pathname: "/third_sensor_found",
+        params: {
+            name: 'GrowSense Sensor',
+            signal: 'Strong',
+        },
+}))
+ 
+} */}
         
         </View>
   );

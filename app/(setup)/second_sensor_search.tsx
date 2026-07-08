@@ -2,6 +2,7 @@ import { Link } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { Ripple } from "../../components/setup/ripple";
+import { mockData } from "../../features/provisioning/mockProvisionService";
 
 export default function Index() {
   return (
@@ -19,7 +20,8 @@ export default function Index() {
       <View style={styles.wrapper}>
         <Ripple delay={0} />
         <Ripple delay={400} />
-        <Ripple delay={800} />
+        <Ripple delay={800} onFinish={mockData}/>
+
       
       <View style={styles.centerDot} />
       </View>
@@ -33,11 +35,7 @@ export default function Index() {
       </Pressable>
       </Link>
 
-      <Link href={"/third_sensor_found"} asChild>
-    <Pressable style={styles.button}>
-        <Text style={styles.buttonText}>Next page</Text>
-      </Pressable>
-      </Link>
+     
    </View>
    </Animated.View>
   );
