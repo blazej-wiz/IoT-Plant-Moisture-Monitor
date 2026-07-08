@@ -3,5 +3,6 @@
     "source.fixAll": "explicit",
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
-  }
+  },
+  "idf.currentSetup": "C:\\esp\\v6.0.2\\esp-idf"
 }
