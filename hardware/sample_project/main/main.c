@@ -9,6 +9,7 @@
 #include "host/ble_hs.h"
 
 #include "gap.h"
+#include "button.h"
 
 #define TAG "PlantSensor"
 
@@ -22,8 +23,17 @@ static void on_stack_reset(int reason) {
 }
 
 static void on_stack_sync(void) {
-    /* when nimble stack works, begin BLE advertising initialising*/
-    adv_init();
+    int button_status = 0;
+
+    /* signals that the nimble stack for BLE is fully ready */
+    /* so this starts the BLE engine, but the button will actually start the advertising*/
+    ESP_LOGI(TAG, "NimBLE stack ready");
+    button_status = button_init();
+    if (button_status != 0)
+    {
+        ESP_LOGE(TAG, "failed to initialise gpio button config, error code %d", button_status);
+        return;
+    }
 }
 
 
@@ -74,6 +84,8 @@ void app_main(void)
         ESP_LOGE(TAG, "failed to initialise GAP server, error code %d", gap_status);
         return;
     }
+
+
     /* initialises the callbacks for nimble to use, so when a certain event is triggered, nimble will refer to a specific function and execute it*/
     nimble_host_config_init();
 
