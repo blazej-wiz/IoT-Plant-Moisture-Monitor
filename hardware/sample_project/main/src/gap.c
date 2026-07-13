@@ -18,7 +18,8 @@ inline static void format_addr(char *addr_str, uint8_t addr[]) {
     sprintf(addr_str, "%02X:%02X:%02X:%02X:%02X:%02X", addr[0], addr[1],
             addr[2], addr[3], addr[4], addr[5]);
 }
-
+static void start_advertising(void);
+static int gap_event_handler(struct ble_gap_event *event, void *arg);
 
 static void start_advertising(void) {
 
@@ -72,7 +73,7 @@ static void start_advertising(void) {
     adv_params.conn_mode = BLE_GAP_CONN_MODE_UND;
     adv_params.disc_mode = BLE_GAP_DISC_MODE_GEN;
     /* will need to change forever later, to stop advertising after a specific amount of time, need to figure that out*/
-    advert_start = ble_gap_adv_start(own_addr_type, NULL, BLE_HS_FOREVER, &adv_params, NULL, NULL);
+    advert_start = ble_gap_adv_start(own_addr_type, NULL, BLE_HS_FOREVER, &adv_params, gap_event_handler, NULL);
 
     if (advert_start != 0){
         ESP_LOGE(TAG, "failed to start advertising, error code %d", advert_start);
@@ -80,6 +81,32 @@ static void start_advertising(void) {
     }
     ESP_LOGI(TAG, "advertising started!");
 
+}
+
+
+static int gap_event_handler(struct ble_gap_event *event, void *arg)
+{
+
+    switch(event->type){
+
+        case BLE_GAP_EVENT_CONNECT:
+        if (event->connect.status == 0){
+            ESP_LOGI(TAG, "phone connected");
+        }
+        else {
+            ESP_LOGE(TAG, "connection failed, status: %d", event->connect.status);
+            start_advertising();
+        }
+        return 0;
+
+        case BLE_GAP_EVENT_DISCONNECT:
+        ESP_LOGI(TAG, "phone disconnected");
+        start_advertising();
+        return 0;
+
+        default:
+        return 0;
+    }
 }
 
 
