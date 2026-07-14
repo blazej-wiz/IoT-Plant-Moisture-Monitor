@@ -10,6 +10,7 @@
 
 #include "gap.h"
 #include "button.h"
+#include "gatt_svc.h"
 
 #define TAG "PlantSensor"
 
@@ -59,6 +60,7 @@ void app_main(void)
     esp_err_t boot_storage = ESP_OK;
     esp_err_t nimble_status = ESP_OK;
     int gap_status = 0;
+    int gatt_status = 0;
 
 
 
@@ -82,6 +84,12 @@ void app_main(void)
     gap_status = gap_init();
     if (gap_status != 0) {
         ESP_LOGE(TAG, "failed to initialise GAP server, error code %d", gap_status);
+        return;
+    }
+
+    gatt_status = gatt_svc_init();
+    if (gatt_status != 0) {
+        ESP_LOGE(TAG, "failed to initialise GATT service, error code %d", gatt_status);
         return;
     }
 
