@@ -8,8 +8,17 @@
 #include "host/util/util.h"
 #include "services/gap/ble_svc_gap.h"
 #include <stdio.h>
+#include "host/ble_uuid.h"
 #define TAG "PlantSensor"
 #define DEVICE_NAME "PlantSensor-0001"
+
+/* defines the custom service UUID so that my app can scan for any sensors that are to do with plant sensoring, 
+as a filter instead of scanning for all BLE devices around me*/
+static const ble_uuid128_t plant_setup_svc_uuid =
+    BLE_UUID128_INIT(0xba, 0x6f, 0x89, 0x2d,
+                     0xdf, 0x5c, 0xb4, 0xae,
+                     0x55, 0x4c, 0x2b, 0xa4,
+                     0x9d, 0xeb, 0xc7, 0x63);
 
 /*this stores the BLE address that nimble chooses in adv_int*/
 static uint8_t own_addr_type;
@@ -37,11 +46,9 @@ static void start_advertising(void) {
 
     /*sets device name in advertising packet*/
     name = ble_svc_gap_device_name();
-    adv_fields.name = (uint8_t *)name;
-    /* provides nimble the length of the name */
-    adv_fields.name_len = strlen(name);
-    /*indicates this is the full name*/
-    adv_fields.name_is_complete = 1;
+    adv_fields.uuids128 = &plant_setup_svc_uuid;
+    adv_fields.num_uuids128 = 1;
+    adv_fields.uuids128_is_complete = 1;
 
     /*setup device transmitting power*/
     /*this determines how strong the BLE signal will be, so affects how far away can be detected etc*/
@@ -56,7 +63,7 @@ static void start_advertising(void) {
         return;
     }
 
-    /*fills in the scan response structure with the actual user friendly device name*/
+    /*fills in the scan response structure with the actual user friendly device name that will be shown to user*/
     rsp_fields.name = (uint8_t *)name;
     /* provides nimble the length of the name */
     rsp_fields.name_len = strlen(name);
