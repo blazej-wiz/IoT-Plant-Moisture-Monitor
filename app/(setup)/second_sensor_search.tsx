@@ -1,10 +1,37 @@
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { Ripple } from "../../components/setup/ripple";
-import { mockData } from "../../features/provisioning/mockProvisionService";
+import { startPlantSensorScan, stopPlantSensorScan, } from "../../features/provisioning/bleProvisionService";
 
 export default function Index() {
+
+
+  useEffect(() => {
+    startPlantSensorScan(
+      (sensor) => {
+        stopPlantSensorScan();
+
+        router.push({
+          pathname: "/third_sensor_found",
+          params: {
+            deviceId: sensor.id,
+            name: sensor.name,
+            signal: sensor.rssi !== null && sensor.rssi > -70 ? "Strong" : "Weak",
+          },
+        });
+      },
+      (error) => {
+        console.log("BLE scan error", error)
+      }
+    );
+
+    return () => {
+      stopPlantSensorScan();
+    };
+  }, []);
+
   return (
 
     <Animated.View
@@ -20,7 +47,7 @@ export default function Index() {
       <View style={styles.wrapper}>
         <Ripple delay={0} />
         <Ripple delay={400} />
-        <Ripple delay={800} onFinish={mockData}/>
+        <Ripple delay={800} />
 
       
       <View style={styles.centerDot} />

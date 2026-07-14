@@ -26,7 +26,7 @@ export default function Index() {
 
         <Image
       style={styles.icon}
-      source={require('../../assets/images/button press.png')}
+      source={require('../../assets/images/button_press.png')}
       contentFit="contain"
       />
 
@@ -37,7 +37,7 @@ export default function Index() {
 
         <Image
       style={styles.icon}
-      source={require('../../assets/images/light icon.png')}
+      source={require('../../assets/images/light_icon.png')}
       contentFit="contain"
       />
 
