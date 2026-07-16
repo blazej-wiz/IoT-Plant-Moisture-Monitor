@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   },
 
   button:{
-    backgroundColor: '#1F4E20',
+    backgroundColor: '#ffffff',
     width: 200,
     height: 40,
     borderRadius: 100,
@@ -69,8 +69,8 @@ const styles = StyleSheet.create({
 
   buttonText: {
     fontSize: 20,
-    color: '#ffffff',
-    fontWeight: '500'
+    color: '#234409',
+    fontWeight: '500',
   },
 
   
