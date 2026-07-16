@@ -73,6 +73,22 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 
+  sendButton:{
+    backgroundColor: '#1F4E20',
+    width: 200,
+    height: 40,
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+
+  sendButtonText: {
+    fontSize: 20,
+    color: '#ffffff',
+    fontWeight: '500',
+  },
+
   
 
   text:{
