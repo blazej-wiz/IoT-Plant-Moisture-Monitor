@@ -1,8 +1,8 @@
 import { connectToPlantSensor } from "@/features/provisioning/bleProvisionService";
 import { Image } from "expo-image";
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 
 
@@ -13,6 +13,10 @@ export default function Index() {
   }>();
 
   useEffect(() => {
+    /** defines a connect function which calls the connecting to device
+     * if succesfull, go to wifi select page sending deviceId
+     * if not succesfull call an error
+     */
     async function connect(){
 
       try {
@@ -30,6 +34,7 @@ export default function Index() {
          */
       }
     }
+    /** call the connect function */
     connect();
   }, []);
     
@@ -51,11 +56,7 @@ export default function Index() {
 
         
             
-        <Link href={"/five_wifi_select"} asChild>
-            <Pressable>
-                <Text>Next page</Text>
-              </Pressable>
-              </Link>
+        
         </View>
   );
 }
