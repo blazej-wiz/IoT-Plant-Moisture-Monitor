@@ -20,17 +20,26 @@ export default function Index() {
               source={require('../../assets/images/wifii.png')}
               contentFit="contain"
               />
-        <Text style={[styles.title]}>WIFI SELECT</Text>
+        <Text style={[styles.title]}>Select Wi-Fi Network</Text>
 
-        <Text style={[styles.text, styles.subtitle]}>Please wait while we establish a secure connection.</Text>
+        <Text style={[styles.text, styles.subtitle]}>Your sensor will connect to this network.</Text>
 
-        
-            
-        <Link href={"/five_wifi_select"} asChild>
-            <Pressable>
-                <Text>Next page</Text>
+        <Pressable style={styles.button}>
+                <Text style={styles.buttonText}>Enter Wi-Fi Name</Text>
+              </Pressable>
+
+        <Pressable style={styles.button}>
+                <Text style={styles.buttonText}>Enter Wi-Fi Password</Text>
+              </Pressable>
+
+
+        <Link href={"/second_sensor_search"} asChild>
+            <Pressable style={styles.button}>
+                <Text style={styles.buttonText}>Send</Text>
               </Pressable>
               </Link>
+            
+        
          
 
         
@@ -46,6 +55,22 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+
+  button:{
+    backgroundColor: '#1F4E20',
+    width: 200,
+    height: 40,
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+
+  buttonText: {
+    fontSize: 20,
+    color: '#ffffff',
+    fontWeight: '500'
   },
 
   
