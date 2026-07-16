@@ -7,9 +7,11 @@ import { startPlantSensorScan, stopPlantSensorScan, } from "../../features/provi
 
 export default function Index() {
 
-
+/* when this screen appears, run this code thats what useeffect does */
   useEffect(() => {
+    /* this calls the plant sensor function, which will either find a sensor or cause an error */
     startPlantSensorScan(
+      /* if sensor is found, stop the scan and go to the next page and pass the sensor details to that page */
       (sensor) => {
         stopPlantSensorScan();
 
@@ -18,6 +20,7 @@ export default function Index() {
           params: {
             deviceId: sensor.id,
             name: sensor.name,
+            /* if the signal exists, if greater than >-70 then return strong otherwise return weak */
             signal: sensor.rssi !== null && sensor.rssi > -70 ? "Strong" : "Weak",
           },
         });
@@ -26,10 +29,11 @@ export default function Index() {
         console.log("BLE scan error", error)
       }
     );
-
+    /* this is there so that if the user clicks cancel or navigates to a different screen the scanning will stop */
     return () => {
       stopPlantSensorScan();
     };
+    /* this [] ensures that the useeffect only runs once */
   }, []);
 
   return (

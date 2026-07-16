@@ -4,9 +4,11 @@ import { StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import { SensorCard } from "../../components/setup/sensorcard";
 
-
+/* this scans for any local params being sent to this page
+which are sent from the second page if the scan succesfully finds a sensor */
 export default function Index() {
-  const {name, signal} = useLocalSearchParams<{
+  const {deviceId, name, signal} = useLocalSearchParams<{
+    deviceId: string,
     name: string,
     signal: string,
   }>();
@@ -28,14 +30,19 @@ export default function Index() {
         <Animated.View
               entering={FadeInDown.duration(700)}
             >
+
+              
         <SensorCard
-         name= {name}
+         name = {name}
+         signal = {signal}
+         deviceId = {deviceId}
          link={{pathname: "/four_connecting",
           params: {
-            name: 'GrowSense Sensor'
+            deviceId,
+            name
           }
          }}
-         signal={signal}
+        
          />
          </Animated.View>
 {/* export function mockData() {
