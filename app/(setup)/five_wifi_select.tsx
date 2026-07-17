@@ -1,19 +1,24 @@
 import { Image } from "expo-image";
-import { Link, useLocalSearchParams } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { useState } from "react";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 
 
 export default function Index() {
-  const {name, signal} = useLocalSearchParams<{
+  const {name, deviceId} = useLocalSearchParams<{
     name: string,
-    signal: string,
+    deviceId: string,
   }>();
+
+const [password, setPassword]=useState("");
+const [info, setInfo]=useState(false);
+const [wifiname, setName]=useState("");
+
 
   return (
     
     <View style={styles.container}>
-
 
         <Image
               style={styles.image}
@@ -25,24 +30,44 @@ export default function Index() {
         <Text style={[styles.text, styles.subtitle]}>Your sensor will connect to this network.</Text>
 
         <Pressable style={styles.button}>
-                <Text style={styles.buttonText}>Enter Wi-Fi Name</Text>
+
+                <TextInput 
+                style={styles.buttonText}
+                placeholder = 'Enter Wi-Fi Name'
+                placeholderTextColor="#2344096d"
+                onChangeText={(text) => setName(text)}
+                value={wifiname}
+                  />
               </Pressable>
 
         <Pressable style={styles.button}>
-                <Text style={styles.buttonText}>Enter Wi-Fi Password</Text>
+                <TextInput 
+                style={styles.buttonText}
+                placeholder = 'Enter Wi-Fi Password'
+                placeholderTextColor="#2344096d"
+                onChangeText={(text) => setPassword(text)}
+                value={password}
+                secureTextEntry
+                  />
               </Pressable>
 
 
-        <Link href={"/second_sensor_search"} asChild>
-            <Pressable style={styles.button}>
-                <Text style={styles.buttonText}>Send</Text>
-              </Pressable>
-              </Link>
-            
-        
-         
-
-        
+        <Pressable
+        style={styles.sendButton}
+        onPress={() =>
+          router.push({
+            pathname: "/second_sensor_search",
+            params:
+            {
+              deviceId,
+              wifiname,
+              password,
+            },
+          })
+        }
+        >
+          <Text style={styles.sendButtonText}>Send</Text>
+        </Pressable>
         </View>
   );
 }
@@ -63,14 +88,18 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 100,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginTop: 10,
+    outlineStyle: "solid",
+    outlineColor: '#234409',
+    outlineWidth: 1,
   },
 
   buttonText: {
-    fontSize: 20,
+    fontSize: 18,
     color: '#234409',
     fontWeight: '500',
+    paddingLeft: 10,
   },
 
   sendButton:{
