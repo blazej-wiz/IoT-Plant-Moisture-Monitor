@@ -1,9 +1,17 @@
+import base64 from "react-native-base64";
 import { BleManager, Device } from "react-native-ble-plx";
-
 /* this creates a constant variable that holds the UUID of my plant sensor that is con
 figured in the BLE hardware setup*/
 export const PLANT_SETUP_SERVICE_UUID =
 "63c7eb9d-a42b-4c55-aeb4-5cdf2d896fba";
+
+
+export const WIFI_CREDENTIALS_CHAR_UUID = 
+"1e8b2fd9-f818-41b0-bab3-e73485f77ed0"
+
+export const SETUP_STATUS_CHAR_UUID =
+  "35ae4bb6-a492-4693-8fb5-dabd880bbcdb";
+
 
 /* this creates a blemanager object */
 const bleManager = new BleManager();
@@ -69,4 +77,43 @@ export async function connectToPlantSensor(deviceId: string) {
     console.log("Discovered services and characteristics");
 
     return readyDevice;
+}
+
+/** creates the sending wifi details back to esp characteristic function */
+export async function sendWifiCredentials(
+    deviceId: string,
+    ssid: string,
+    password: string
+){
+    /** turn the variables into a json */
+    const credentialsJson = JSON.stringify({
+        ssid,
+        password,
+    });
+    /** encode the variables into base64 as the react native ble takes the value as a base64 format. */
+    const encodedCredentials = base64.encode(credentialsJson);
+
+    /** write those values to the specific characteristic in the specific service */
+    await bleManager.writeCharacteristicWithResponseForDevice(
+        deviceId,
+        PLANT_SETUP_SERVICE_UUID,
+        WIFI_CREDENTIALS_CHAR_UUID,
+        encodedCredentials
+    );
+
+    console.log("Sent Wi-Fi credentials to ESP32");
+
+}
+
+export async function readSetupStatus(deviceId: string){
+    const characteristic = await bleManager.readCharacteristicForDevice(
+        deviceId,
+        PLANT_SETUP_SERVICE_UUID,
+        SETUP_STATUS_CHAR_UUID
+    );
+
+    const status = base64.decode(characteristic.value);
+    console.log("Setup Status", status);
+
+    return status;
 }

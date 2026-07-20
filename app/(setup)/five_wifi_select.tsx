@@ -12,7 +12,6 @@ export default function Index() {
   }>();
 
 const [password, setPassword]=useState("");
-const [info, setInfo]=useState(false);
 const [wifiname, setName]=useState("");
 
 
@@ -54,9 +53,10 @@ const [wifiname, setName]=useState("");
 
         <Pressable
         style={styles.sendButton}
+        /** this should probably send to esp, if thats succesful then go to wifi connecting page maybe */
         onPress={() =>
           router.push({
-            pathname: "/second_sensor_search",
+            pathname: "/six_wifi_connecting",
             params:
             {
               deviceId,

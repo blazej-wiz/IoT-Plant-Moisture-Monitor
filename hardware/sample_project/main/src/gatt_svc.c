@@ -4,6 +4,8 @@
 #include "host/ble_hs.h"
 #include "os/os_mbuf.h"
 #include "services/gatt/ble_svc_gatt.h"
+#include "wifi_setup.h"
+#include "cJSON.h"
 #define TAG "PlantSensorGATT"
 /* these are all kind of like can think of them like web API endpoints like /device_info for example*/
 /* Plant Sensor Setup Service UUID: 63c7eb9d-a42b-4c55-aeb4-5cdf2d896fba */
@@ -42,6 +44,10 @@ static const char *setup_status = "waiting";
 static uint16_t setup_status_chr_val_handle;
 
 
+void gatt_svc_set_setup_status(const char *status){
+    setup_status = status;
+    ESP_LOGI(TAG, "setup status changed to: %s", setup_status);
+}
 
 
 static int device_info_chr_access(uint16_t conn_handle, uint16_t attr_handle, struct ble_gatt_access_ctxt *ctxt, void *arg)
@@ -90,7 +96,38 @@ static int wifi_credentials_chr_access(uint16_t conn_handle, uint16_t attr_handl
     }
 
     ESP_LOGI(TAG, "recieved Wi-Fi credentials: %s", wifi_json);
+    /** this parses the details send to the esp into a json object */
+    cJSON *root = cJSON_Parse(wifi_json);
+    if (root == NULL) {
+        ESP_LOGE(TAG, "failed to parse Wi-Fi credentials JSON");
+        return BLE_ATT_ERR_UNLIKELY;
+    }
+    /** grab the ssid and grab the password from the json object */
+    cJSON *ssid_json = cJSON_GetObjectItem(root, "ssid");
+    cJSON *password_json = cJSON_GetObjectItem(root, "password");
+    /** if the ssid is missing or the password is missing, throw an error */
+    if(!cJSON_IsString(ssid_json) || !cJSON_IsString(password_json)){
+        ESP_LOGE(TAG, "Wi-Fi credentials JSON missing ssid or password");
+        cJSON_Delete(root);
+        return BLE_ATT_ERR_INVALID_ATTR_VALUE_LEN;
+    }
+    /** convert both json objects into actual c strings  */
+    const char *ssid = ssid_json->valuestring;
+    const char *password = password_json->valuestring;
+    /** log the name and password so i can check if it all seems correct */
+    ESP_LOGI(TAG, "wifi ssid is: %s", ssid);
+    ESP_LOGI(TAG, "password length is: %s", password);
 
+    int wifi_status = wifi_setup_connect(ssid, password);
+    if (wifi_status != 0){
+        ESP_LOGE(TAG, "wifi_setup failed, error: %d", wifi_status);
+        cJSON_Delete(root);
+        return BLE_ATT_ERR_UNLIKELY;
+    }
+
+
+
+    cJSON_Delete(root);
     return 0;
 }
     

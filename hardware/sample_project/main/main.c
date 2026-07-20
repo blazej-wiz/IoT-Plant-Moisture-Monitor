@@ -11,6 +11,7 @@
 #include "gap.h"
 #include "button.h"
 #include "gatt_svc.h"
+#include "wifi_setup.h"
 
 #define TAG "PlantSensor"
 
@@ -61,6 +62,7 @@ void app_main(void)
     esp_err_t nimble_status = ESP_OK;
     int gap_status = 0;
     int gatt_status = 0;
+    int wifi_status = 0;
 
 
 
@@ -72,6 +74,12 @@ void app_main(void)
     }
     if (boot_storage != ESP_OK) {
         ESP_LOGE(TAG, "failed to initialise nvs flash, error code: %d ", boot_storage);
+        return;
+    }
+
+    wifi_status = wifi_setup_init();
+    if (wifi_status != 0){
+        ESP_LOGE(TAG, "failed to initialise wifi, error code %d", wifi_status);
         return;
     }
 
@@ -92,6 +100,7 @@ void app_main(void)
         ESP_LOGE(TAG, "failed to initialise GATT service, error code %d", gatt_status);
         return;
     }
+
 
 
     /* initialises the callbacks for nimble to use, so when a certain event is triggered, nimble will refer to a specific function and execute it*/
