@@ -1,10 +1,41 @@
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { useEffect } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { Ripple } from "../../components/setup/ripple";
-import { mockData } from "../../features/provisioning/mockProvisionService";
+import { startPlantSensorScan, stopPlantSensorScan, } from "../../features/provisioning/bleProvisionService";
 
 export default function Index() {
+
+/* when this screen appears, run this code thats what useeffect does */
+  useEffect(() => {
+    /* this calls the plant sensor function, which will either find a sensor or cause an error */
+    startPlantSensorScan(
+      /* if sensor is found, stop the scan and go to the next page and pass the sensor details to that page */
+      (sensor) => {
+        stopPlantSensorScan();
+
+        router.push({
+          pathname: "/third_sensor_found",
+          params: {
+            deviceId: sensor.id,
+            name: sensor.name,
+            /* if the signal exists, if greater than >-70 then return strong otherwise return weak */
+            signal: sensor.rssi !== null && sensor.rssi > -70 ? "Strong" : "Weak",
+          },
+        });
+      },
+      (error) => {
+        console.log("BLE scan error", error)
+      }
+    );
+    /* this is there so that if the user clicks cancel or navigates to a different screen the scanning will stop */
+    return () => {
+      stopPlantSensorScan();
+    };
+    /* this [] ensures that the useeffect only runs once */
+  }, []);
+
   return (
 
     <Animated.View
@@ -20,7 +51,7 @@ export default function Index() {
       <View style={styles.wrapper}>
         <Ripple delay={0} />
         <Ripple delay={400} />
-        <Ripple delay={800} onFinish={mockData}/>
+        <Ripple delay={800} />
 
       
       <View style={styles.centerDot} />

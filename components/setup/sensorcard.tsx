@@ -7,10 +7,11 @@ type SensorCardProps = {
     name: string;
     link: Href;
     signal: string;
+    deviceId: string;
   
 }
 
-export const SensorCard = ({name, link, signal}: SensorCardProps) => {
+export const SensorCard = ({name, link, signal, deviceId}: SensorCardProps) => {
 
     return (
     <Link href={ link } asChild>
@@ -25,6 +26,7 @@ export const SensorCard = ({name, link, signal}: SensorCardProps) => {
             <View style={ styles.signalContainer }>
                 <Text style={styles.buttonText}>{name}</Text>
               <Text style={styles.buttonSubText}>{signal}</Text>
+              <Text style={styles.buttonSubText}>{deviceId}</Text>
             </View>
           </Pressable>
           </Link>

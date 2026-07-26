@@ -1,16 +1,46 @@
+import { connectToPlantSensor } from "@/features/provisioning/bleProvisionService";
 import { Image } from "expo-image";
-import { Link, useLocalSearchParams } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { useEffect } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 
 
 export default function Index() {
-  const {name, signal} = useLocalSearchParams<{
+  const {deviceId, name} = useLocalSearchParams<{
+    deviceId: string,
     name: string,
-    signal: string,
   }>();
 
+  useEffect(() => {
+    /** defines a connect function which calls the connecting to device
+     * if succesfull, go to wifi select page sending deviceId
+     * if not succesfull call an error
+     */
+    async function connect(){
+
+      try {
+        await connectToPlantSensor(deviceId);
+
+        router.push({
+          pathname: "/five_wifi_select",
+          params: { deviceId, name},
+        });
+
+      } catch (error) {
+        console.log("Connection failed", error);
+        /** could maybe have a different page to show the error occured or just a popup then route
+         * back to main page
+         */
+      }
+    }
+    /** call the connect function */
+    connect();
+  }, []);
+    
+  
   return (
+
     
     <View style={styles.container}>
 
@@ -26,13 +56,6 @@ export default function Index() {
 
         
             
-        <Link href={"/five_wifi_select"} asChild>
-            <Pressable>
-                <Text>Next page</Text>
-              </Pressable>
-              </Link>
-         
-
         
         </View>
   );
