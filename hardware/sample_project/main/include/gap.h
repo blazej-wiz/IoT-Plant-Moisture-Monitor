@@ -4,5 +4,6 @@
 
 void adv_init(void);
 int gap_init(void);
+void stop_advertising(void);
 
 #endif

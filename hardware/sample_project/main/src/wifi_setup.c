@@ -8,6 +8,7 @@
 #include <string.h>
 #define TAG "WifiSetup"
 
+#include "gap.h"
 
 static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_date){
 
@@ -19,6 +20,7 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t e
     if(event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP){
         ESP_LOGE(TAG, "Wi-Fi connected");
         gatt_svc_set_setup_status("wifi_connected");
+        stop_advertising();
 }
 }
 

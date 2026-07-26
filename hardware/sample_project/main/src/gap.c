@@ -9,6 +9,7 @@
 #include "services/gap/ble_svc_gap.h"
 #include <stdio.h>
 #include "host/ble_uuid.h"
+#include <stdbool.h>
 #define TAG "PlantSensor"
 #define DEVICE_NAME "PlantSensor-0001"
 
@@ -27,8 +28,34 @@ inline static void format_addr(char *addr_str, uint8_t addr[]) {
     sprintf(addr_str, "%02X:%02X:%02X:%02X:%02X:%02X", addr[0], addr[1],
             addr[2], addr[3], addr[4], addr[5]);
 }
+static bool setup_complete = false;
+static uint16_t phone_conn_handle = 0;
 static void start_advertising(void);
 static int gap_event_handler(struct ble_gap_event *event, void *arg);
+
+
+void stop_advertising(void){
+
+    setup_complete = true;
+
+    int ble_terminated = ble_gap_terminate(phone_conn_handle, BLE_ERR_REM_USER_CONN_TERM);
+
+    if (ble_terminated == 0){
+        ESP_LOGI(TAG, "Phone connection has been terminated");
+
+    } else {
+        ESP_LOGI(TAG, "Failed to terminate BLE connection");
+    }
+
+    int ble_stop = ble_gap_adv_stop();
+
+    if (ble_stop == 0){
+        
+        ESP_LOGI(TAG, "BLE advertising stopped");
+    } else {
+        ESP_LOGI(TAG, "BLE advertising already stopped or stop failed");
+    }
+}
 
 static void start_advertising(void) {
 
@@ -99,6 +126,7 @@ static int gap_event_handler(struct ble_gap_event *event, void *arg)
         case BLE_GAP_EVENT_CONNECT:
         if (event->connect.status == 0){
             ESP_LOGI(TAG, "phone connected");
+            phone_conn_handle = event->connect.conn_handle;
         }
         else {
             ESP_LOGE(TAG, "connection failed, status: %d", event->connect.status);
@@ -108,7 +136,9 @@ static int gap_event_handler(struct ble_gap_event *event, void *arg)
 
         case BLE_GAP_EVENT_DISCONNECT:
         ESP_LOGI(TAG, "phone disconnected");
-        start_advertising();
+        if (!setup_complete){
+            start_advertising();
+        }
         return 0;
 
         default:
