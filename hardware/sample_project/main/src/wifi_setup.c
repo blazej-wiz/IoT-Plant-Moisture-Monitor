@@ -20,6 +20,7 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t e
     if(event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP){
         ESP_LOGE(TAG, "Wi-Fi connected");
         gatt_svc_set_setup_status("wifi_connected");
+        vTaskDelay(pdMS_TO_TICKS(5000));
         stop_advertising();
 }
 }
