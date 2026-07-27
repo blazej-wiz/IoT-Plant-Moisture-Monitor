@@ -10,15 +10,16 @@
 #define TAG "moisture_sensor"
 
 #define MOISTURE_DRY_RAW 2400
-#define MOISTURE_WET_RAW 1200
+#define MOISTURE_WET_RAW 1100
 
-#define NUM_READINGS 5
+#define NUM_READINGS 10
 
 /* this defines the adc handle, so just defines to a variable the analog (so voltage number) to a digital number that i can read
 as analog is just a voltage like 1.4 but digital gives me a number like 2000 for example
 so the handle allows us to control the adc unit later on*/
 static adc_oneshot_unit_handle_t adc_handle;
 static adc_channel_t moisture_channel;
+
 
 
 int moisture_read_raw_value(void){
@@ -30,13 +31,6 @@ int moisture_read_raw_value(void){
     return raw_value;
     
 }
-static void moisture_read_test(void *param){
-
-    while (1){
-        moisture_read_raw_value();
-        vTaskDelay(pdMS_TO_TICKS(2000));
-    }
-}
 
 
 int moisture_read_average_raw(void){
@@ -46,7 +40,7 @@ int moisture_read_average_raw(void){
     for (int i = 0; i < NUM_READINGS; i++){
         int reading = moisture_read_raw_value();
         total += reading;
-        vTaskDelay(pdMS_TO_TICKS(1000));
+        vTaskDelay(pdMS_TO_TICKS(50));
 
         ESP_LOGI(TAG, "reading %d: %d", i+1, reading);
     }
@@ -55,6 +49,7 @@ int moisture_read_average_raw(void){
 
     return average;
 }
+
 
 int moisture_read_percent(void){
 
@@ -72,6 +67,46 @@ int moisture_read_percent(void){
 
     return percent;
 }
+
+
+
+
+
+static void moisture_read_test_wifi(void *param){
+
+    while (1){
+        int percent = moisture_read_percent();
+
+        ESP_LOGI(TAG, "Current moisture: %d%%", percent);
+
+        vTaskDelay(pdMS_TO_TICKS(5000));
+    }
+}
+
+
+void start_wifi_test_task(void){
+
+    xTaskCreate(
+        moisture_read_test_wifi,
+        "moisture_test",
+        2048,
+        NULL,
+        5,
+        NULL
+    );
+
+
+}
+
+static void moisture_read_test(void *param){
+
+    while (1){
+        moisture_read_raw_value();
+        vTaskDelay(pdMS_TO_TICKS(2000));
+    }
+}
+
+
 
 
 

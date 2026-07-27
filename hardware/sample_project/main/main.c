@@ -177,7 +177,6 @@ void app_main(void)
         ESP_LOGE(TAG, "failed to initialise moisture ADC, error code %d", moisture_status);
         return;
     }
-    start_test_task();
 
 
 
