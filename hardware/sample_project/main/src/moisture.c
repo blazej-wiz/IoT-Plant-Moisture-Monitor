@@ -3,7 +3,7 @@
 #include "esp_adc/adc_oneshot.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-
+#include "api.h"
 
 
 #define MOISTURE_ADC_GPIO 4
@@ -64,7 +64,7 @@ int moisture_read_percent(void){
     if (percent > 100){
         percent = 100;
     }
-
+    post_function_moisture_readings(percent, average_raw);
     return percent;
 }
 

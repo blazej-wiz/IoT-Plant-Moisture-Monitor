@@ -1,10 +1,11 @@
 from fastapi import FastAPI, Depends
 import os
 from dotenv import load_dotenv
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from pydantic import BaseModel
+from datetime import datetime, timezone
 
 
 app = FastAPI()
@@ -32,6 +33,17 @@ class ESP(Base):
     model = Column(String, index=True)
 
 
+class MoistureReading(Base):
+    __tablename__ = 'moisture_readings'
+
+    readingid = Column(Integer, primary_key=True, index=True)
+    espid = Column(Integer, ForeignKey("esp.id"), index = True)
+    percentage = Column(Integer, index=True)
+    created = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), index=True)
+    raw_average = Column(Integer, index=True)
+    
+
+
 def get_db():
     # this allows a new session to be created and closed each time a function
     # wants to modify the database at a endpoint as it links it to the database of supabase
@@ -51,11 +63,26 @@ class espCreate(BaseModel):
     model: str
 
 
+class ReadingCreate(BaseModel):
+    percentage: int
+    deviceid: str
+    raw_average: int
+
+
+
+
+
 @app.post("/api/devices")
 # so this defines the incoming data to the endpoint as esp_data and it checks using the
 #espcreate class if the data matches the types it should and then it links the database
 # commands to the actual session that is connected to supabase database
 def create_esp(esp_data: espCreate, db: Session = Depends(get_db)):
+
+    existing_sensor = db.query(ESP).filter(ESP.deviceid == esp_data.deviceid).first()
+
+    if existing_sensor:
+        return f"ESP {esp_data.deviceid} already exists: {existing_sensor}."
+
     # then this fills in the ESP data table defined earlier with adequate data
     # then adds that new data to the database and commits it which sends it over to 
     #supabase
@@ -65,3 +92,19 @@ def create_esp(esp_data: espCreate, db: Session = Depends(get_db)):
     db.add(new_esp)
     db.commit()
 
+
+@app.post("/api/readings")
+#so this also actually opens the door then for incorporating multiple different databases into one project
+# where i could open up a session linked to another engine and get that specific db
+def create_reading(reading_data: ReadingCreate, db: Session = Depends(get_db)):
+
+    espid = db.query(ESP).filter(ESP.deviceid == reading_data.deviceid).first()
+
+
+    new_reading = MoistureReading(
+        percentage=reading_data.percentage,
+        espid = espid.id,
+        raw_average = reading_data.raw_average,
+    )
+    db.add(new_reading)
+    db.commit()

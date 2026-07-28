@@ -7,6 +7,7 @@
 #include "gatt_svc.h"
 #include <string.h>
 #include "moisture.h"
+#include "api.h"
 #define TAG "WifiSetup"
 #define moisture_tag "Moisture Sensor Reading"
 #include "gap.h"
@@ -24,9 +25,8 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t e
         vTaskDelay(pdMS_TO_TICKS(5000));
         stop_advertising();
 
-        
+        post_function_esp_data();
         start_wifi_test_task();
-
 }
 }
 
