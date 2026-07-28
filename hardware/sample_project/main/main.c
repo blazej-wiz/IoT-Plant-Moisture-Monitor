@@ -12,11 +12,79 @@
 #include "button.h"
 #include "gatt_svc.h"
 #include "wifi_setup.h"
+#include "moisture.h"
 
 #define TAG "PlantSensor"
 
 
+#include "esp_log.h"
+#include "esp_adc/adc_oneshot.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
+// #define MOISTURE_ADC_GPIO 4
+
+// static const char *MOISTURE_TAG = "MoistureTest";
+
+// static adc_oneshot_unit_handle_t adc_handle;
+// static adc_channel_t moisture_channel;
+
+// static void moisture_test_task(void *param)
+// {
+//     int raw_value = 0;
+
+//     while (1) {
+//         esp_err_t ret = adc_oneshot_read(adc_handle, moisture_channel, &raw_value);
+
+//         if (ret == ESP_OK) {
+//             ESP_LOGI(MOISTURE_TAG, "Raw moisture ADC value: %d", raw_value);
+//         } else {
+//             ESP_LOGE(MOISTURE_TAG, "ADC read failed: %s", esp_err_to_name(ret));
+//         }
+
+//         vTaskDelay(pdMS_TO_TICKS(1000));
+//     }
+// }
+
+// void moisture_test_init(void)
+// {
+//     adc_unit_t unit_id;
+
+//     ESP_ERROR_CHECK(adc_oneshot_io_to_channel(
+//         MOISTURE_ADC_GPIO,
+//         &unit_id,
+//         &moisture_channel
+//     ));
+
+//     adc_oneshot_unit_init_cfg_t init_config = {
+//         .unit_id = unit_id,
+//         .ulp_mode = ADC_ULP_MODE_DISABLE,
+//     };
+
+//     ESP_ERROR_CHECK(adc_oneshot_new_unit(&init_config, &adc_handle));
+
+//     adc_oneshot_chan_cfg_t channel_config = {
+//         .bitwidth = ADC_BITWIDTH_DEFAULT,
+//         .atten = ADC_ATTEN_DB_12,
+//     };
+
+//     ESP_ERROR_CHECK(adc_oneshot_config_channel(
+//         adc_handle,
+//         moisture_channel,
+//         &channel_config
+//     ));
+
+//     ESP_LOGI(MOISTURE_TAG, "Moisture ADC test initialized on GPIO%d", MOISTURE_ADC_GPIO);
+
+//     xTaskCreate(
+//         moisture_test_task,
+//         "moisture_test_task",
+//         2048,
+//         NULL,
+//         5,
+//         NULL
+//     );
+// }
 
 
 static void on_stack_reset(int reason) {
@@ -63,6 +131,7 @@ void app_main(void)
     int gap_status = 0;
     int gatt_status = 0;
     int wifi_status = 0;
+    int moisture_status = 0;
 
 
 
@@ -88,6 +157,8 @@ void app_main(void)
         ESP_LOGE(TAG, "failed to initialise nimbe stack, error code %d", nimble_status);
         return;
     }
+
+   
     /* gap_init is not currently a function, that will need to be created to initialise gap server in different file later*/
     gap_status = gap_init();
     if (gap_status != 0) {
@@ -98,6 +169,12 @@ void app_main(void)
     gatt_status = gatt_svc_init();
     if (gatt_status != 0) {
         ESP_LOGE(TAG, "failed to initialise GATT service, error code %d", gatt_status);
+        return;
+    }
+    
+    moisture_status = moisture_sensor_init();
+    if (moisture_status != 0){
+        ESP_LOGE(TAG, "failed to initialise moisture ADC, error code %d", moisture_status);
         return;
     }
 
