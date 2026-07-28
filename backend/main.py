@@ -43,6 +43,16 @@ class MoistureReading(Base):
     raw_average = Column(Integer, index=True)
     
 
+class Plants(Base):
+    __tablename__ = "plants"
+
+    id = Column(Integer, primary_key=True, Index=True)
+    species = Column(String, index=True)
+    watering_category = Column(String, index=True)
+    watering_threshold = Column(Integer, index=True)
+    alert_clear_threshold = Column(Integer, index=True)
+    espid = Column(Integer, ForeignKey("esp.id"), index=True)
+
 
 def get_db():
     # this allows a new session to be created and closed each time a function
@@ -108,3 +118,12 @@ def create_reading(reading_data: ReadingCreate, db: Session = Depends(get_db)):
     )
     db.add(new_reading)
     db.commit()
+
+
+@app.get("/api/plants")
+def get_plants(db : Session = Depends(get_db)):
+
+    plants = db.query(Plants).all()
+
+    print(plants)
+    return plants

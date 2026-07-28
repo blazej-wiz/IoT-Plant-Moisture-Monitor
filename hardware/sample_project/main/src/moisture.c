@@ -10,7 +10,7 @@
 #define TAG "moisture_sensor"
 
 #define MOISTURE_DRY_RAW 2400
-#define MOISTURE_WET_RAW 1100
+#define MOISTURE_WET_RAW 800
 
 #define NUM_READINGS 10
 

@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
-import { StyleSheet, Text, View } from "react-native";
-
+import { Link } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 /* this scans for any local params being sent to this page
 which are sent from the second page if the scan succesfully finds a sensor */
 export default function Index() {
@@ -16,22 +16,15 @@ export default function Index() {
               source={require('../../assets/images/tick.png')}
               contentFit="contain"
               />
-        <Text style={[styles.title]}>Wifi connected!</Text>
+        <Text style={[styles.title]}>Setup Complete!</Text>
 
-        <Text style={[styles.text, styles.subtitle]}>Select your sensor to connect.</Text>
+        <Text style={[styles.text, styles.subtitle]}>Your sensor is now connected to Wi-Fi and ready to use.</Text>
 
-       
-{/* export function mockData() {
-    return (
-    router.push({
-        pathname: "/third_sensor_found",
-        params: {
-            name: 'GrowSense Sensor',
-            signal: 'Strong',
-        },
-}))
- 
-} */}
+         <Link href={"/eight_plant_select"} asChild>
+            <Pressable style={styles.button}>
+                <Text style={styles.buttonText}>Continue</Text>
+              </Pressable>
+              </Link>
         
         </View>
   );
@@ -107,6 +100,21 @@ const styles = StyleSheet.create({
     borderRadius: 35,
     backgroundColor: "#dfe9df",
     opacity: 1,
-  }
+  },
 
+  button:{
+    backgroundColor: '#1F4E20',
+    width: 200,
+    height: 40,
+    borderRadius: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+
+  buttonText: {
+    fontSize: 20,
+    color: '#ffffff',
+    fontWeight: '500'
+  },
 });
