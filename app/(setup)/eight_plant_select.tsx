@@ -1,9 +1,50 @@
 import { Image } from "expo-image";
 import { Link } from "expo-router";
+import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 /* this scans for any local params being sent to this page
 which are sent from the second page if the scan succesfully finds a sensor */
+
+
+const DropdownComponent = () => {
+    const [value, setValue] = useState(null);
+}
+
+fetch("http://192.168.0.90:8000/api/plants")
+
+.then(response => response.json())
+
+.then(res => console.log(res))
+
+
+type Plant = {
+    species: string;
+}
+
+
 export default function Index() {
+
+    /* so this starts plants as empty, and i can use setplants as a function to fill that plants variable*/
+const [data, setData] = useState([])
+const [error, setError] = useState("");
+
+useEffect(() => {
+    async function fetchData() {
+        const response = await fetch("http://192.168.0.90:8000/api/plants");
+        if (!response.ok){
+            setError("Failed to fetch data");
+        }
+        const data = await response.json()
+        console.log({data})
+        setData(data);
+    }
+    fetchData();
+}, []);
+
+    if (error == "Failed to fetch data"){
+        return <text>{error}</text>
+    }
+
 
 
   return (
@@ -16,9 +57,9 @@ export default function Index() {
               source={require('../../assets/images/tick.png')}
               contentFit="contain"
               />
-        <Text style={[styles.title]}>PLANT PLANT PLANT Complete!</Text>
+        <Text style={[styles.title]}>Which plant is this sensor for</Text>
 
-        <Text style={[styles.text, styles.subtitle]}>Your sensor is now connected to Wi-Fi and ready to use.</Text>
+        <Text style={[styles.text, styles.subtitle]}>Select an existing plant.</Text>
 
          <Link href={"/eight_plant_select"} asChild>
             <Pressable style={styles.button}>
