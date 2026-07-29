@@ -151,7 +151,7 @@ def connect_to_sensor(plant_id: int, device_data: DeviceLink, db: Session = Depe
 
     esp = db.query(ESP).filter(ESP.deviceid == device_data.deviceid).first()
 
-    plant = db.query(plant).filter(plant.id == plant_id).first()
+    plant = db.query(Plants).filter(Plants.plant.id == plant_id).first()
 
     device_link = plant(
         espid = esp.id
