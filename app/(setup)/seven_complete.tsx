@@ -1,12 +1,11 @@
 import { Image } from "expo-image";
-import { Link } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 /* this scans for any local params being sent to this page
 which are sent from the second page if the scan succesfully finds a sensor */
 export default function Index() {
 
-  export default function Index() {
+
     const {deviceId} = useLocalSearchParams<{
       deviceId: string,
     }>();
