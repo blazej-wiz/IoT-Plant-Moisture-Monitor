@@ -148,7 +148,7 @@ def create_reading(reading_data: ReadingCreate, db: Session = Depends(get_db)):
 
 @app.put("/api/plants/{plant_id}/sensor")
 def connect_to_sensor(plant_id: int, device_data: DeviceLink, db: Session = Depends(get_db)):
-
+    print(device_data.deviceid)
     esp = db.query(ESP).filter(ESP.deviceid == device_data.deviceid).first()
 
     if esp is None:
