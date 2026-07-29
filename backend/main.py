@@ -151,6 +151,9 @@ def connect_to_sensor(plant_id: int, device_data: DeviceLink, db: Session = Depe
 
     esp = db.query(ESP).filter(ESP.deviceid == device_data.deviceid).first()
 
+    if esp is None:
+        print("problem")
+
     plant = db.query(Plants).filter(Plants.id == plant_id).first()
 
     device_link = plant(
