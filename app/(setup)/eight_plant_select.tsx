@@ -1,6 +1,6 @@
 import { LinkESPtoPlant } from "@/features/plants/plantService";
 import Entypo from '@expo/vector-icons/Entypo';
-import { router, useLocalSearchParams } from "expo-router";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
@@ -25,14 +25,13 @@ type data = {
     species: string;
 }
 
+
 export default function Index() {
     /* so this starts plants as empty, and i can use setplants as a function to fill that plants variable*/
 const [data, setData] = useState([]);
 const [error, setError] = useState("");
 const [value, setValue] = useState<number | null>(null);
-const {deviceId} = useLocalSearchParams<{
-    deviceId: string,
-}>();
+const deviceid = "ps_9ccc014229e2"
 
 useEffect(() => {
     async function fetchData() {
@@ -112,7 +111,7 @@ useEffect(() => {
                     Alert.alert("Please select a plant before continuing");
                     return;
                 }
-                    const link = await LinkESPtoPlant(deviceId, value)
+                    const link = await LinkESPtoPlant(deviceid, value)
 
                     if (link.message == "Plant linked to sensor"){
                         router.push({
