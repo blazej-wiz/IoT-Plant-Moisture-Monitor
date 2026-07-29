@@ -156,11 +156,8 @@ def connect_to_sensor(plant_id: int, device_data: DeviceLink, db: Session = Depe
 
     plant = db.query(Plants).filter(Plants.id == plant_id).first()
 
-    device_link = plant(
-        espid = esp.id
-    )
+    plant.espid = esp.id
 
-    db.add(device_link)
     db.commit()
 
     return {
