@@ -46,7 +46,7 @@ class MoistureReading(Base):
 class Plants(Base):
     __tablename__ = "plants"
 
-    id = Column(Integer, primary_key=True, Index=True)
+    id = Column(Integer, primary_key=True, index=True)
     species = Column(String, index=True)
     watering_category = Column(String, index=True)
     watering_threshold = Column(Integer, index=True)

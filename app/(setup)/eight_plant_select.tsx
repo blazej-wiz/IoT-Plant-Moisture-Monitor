@@ -6,15 +6,15 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 which are sent from the second page if the scan succesfully finds a sensor */
 
 
-const DropdownComponent = () => {
-    const [value, setValue] = useState(null);
-}
+// const DropdownComponent = () => {
+//     const [value, setValue] = useState(null);
+// }
 
-fetch("http://192.168.0.90:8000/api/plants")
+// fetch("http://192.168.0.90:8000/api/plants")
 
-.then(response => response.json())
+// .then(response => response.json())
 
-.then(res => console.log(res))
+// .then(res => console.log(res))
 
 
 type Plant = {
