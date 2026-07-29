@@ -37,7 +37,13 @@ export default function Index() {
                 if (status === "wifi_connected"){
                     clearInterval(interval);
 
-                    router.push("/seven_complete");
+                    router.push({
+                      pathname: "/seven_complete",
+                      params:
+                      {
+                        deviceId,
+                      }
+                    });
                 }
                     if (status === "wifi_failed") {
                         clearInterval(interval);

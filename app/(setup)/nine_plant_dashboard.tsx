@@ -1,15 +1,10 @@
 import { Image } from "expo-image";
-import { Link } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { router, useLocalSearchParams } from "expo-router";
+import { StyleSheet, Text, View } from "react-native";
 /* this scans for any local params being sent to this page
 which are sent from the second page if the scan succesfully finds a sensor */
 export default function Index() {
 
-  export default function Index() {
-    const {deviceId} = useLocalSearchParams<{
-      deviceId: string,
-    }>();
+
 
 
   return (
@@ -27,20 +22,7 @@ export default function Index() {
         <Text style={[styles.text, styles.subtitle]}>Your sensor is now connected to Wi-Fi and ready to use.</Text>
 
          
-            <Pressable
-                    style={styles.button}
-                    onPress={() =>
-                      router.push({
-                        pathname: "/eight_plant_select",
-                        params:
-                        {
-                          deviceId,
-                        },
-                      })
-                    }
-                    >
-                      <Text style={styles.buttonText}>Send</Text>
-                    </Pressable>
+
               
         
         </View>

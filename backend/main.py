@@ -78,6 +78,8 @@ class ReadingCreate(BaseModel):
     deviceid: str
     raw_average: int
 
+class DeviceLink(BaseModel):
+    deviceid: str
 
 
 
@@ -125,5 +127,39 @@ def get_plants(db : Session = Depends(get_db)):
 
     plants = db.query(Plants).all()
 
-    print(plants)
     return plants
+
+@app.post("/api/readings")
+#so this also actually opens the door then for incorporating multiple different databases into one project
+# where i could open up a session linked to another engine and get that specific db
+def create_reading(reading_data: ReadingCreate, db: Session = Depends(get_db)):
+
+    espid = db.query(ESP).filter(ESP.deviceid == reading_data.deviceid).first()
+
+
+    new_reading = MoistureReading(
+        percentage=reading_data.percentage,
+        espid = espid.id,
+        raw_average = reading_data.raw_average,
+    )
+    db.add(new_reading)
+    db.commit()
+
+
+@app.put("/api/plants/{plant_id}/sensor")
+def connect_to_sensor(plant_id: int, device_data: DeviceLink, db: Session = Depends(get_db)):
+
+    esp = db.query(ESP).filter(ESP.deviceid == device_data.deviceid).first()
+
+    plant = db.query(plant).filter(plant.id == plant_id).first()
+
+    device_link = plant(
+        espid = esp.id
+    )
+
+    db.add(device_link)
+    db.commit()
+
+    return {
+        "message": "Plant linked to sensor"
+    }

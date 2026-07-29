@@ -1,8 +1,10 @@
+import { LinkESPtoPlant } from "@/features/plants/plantService";
 import Entypo from '@expo/vector-icons/Entypo';
-import { Link } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
+
 /* this scans for any local params being sent to this page
 which are sent from the second page if the scan succesfully finds a sensor */
 
@@ -28,6 +30,9 @@ export default function Index() {
 const [data, setData] = useState([]);
 const [error, setError] = useState("");
 const [value, setValue] = useState<number | null>(null);
+const {deviceId} = useLocalSearchParams<{
+    deviceId: string,
+}>();
 
 useEffect(() => {
     async function fetchData() {
@@ -99,11 +104,31 @@ useEffect(() => {
         <DropdownComponent/>
       </View>
 
-      <Link href={"/eight_plant_select"} asChild>
-        <Pressable style={styles.button}>
+
+
+        <Pressable style={styles.button}
+            onPress={async () =>{
+                if (value == null){
+                    Alert.alert("Please select a plant before continuing");
+                    return;
+                }
+                    const link = await LinkESPtoPlant(deviceId, value)
+
+                    if (link.message == "Plant linked to sensor"){
+                        router.push({
+                            pathname: "/nine_plant_dashboard"
+                        })
+                    }
+                    else {
+                        Alert.alert("Plant could not be linked to sensor, try again")
+                        return;
+                    }
+
+            }}>
           <Text style={styles.buttonText}>Continue</Text>
         </Pressable>
-      </Link>
+            
+      
     </View>
   );
 }
