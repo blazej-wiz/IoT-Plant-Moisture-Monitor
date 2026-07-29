@@ -1,7 +1,8 @@
-import { Image } from "expo-image";
+import Entypo from '@expo/vector-icons/Entypo';
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
 /* this scans for any local params being sent to this page
 which are sent from the second page if the scan succesfully finds a sensor */
 
@@ -17,16 +18,16 @@ which are sent from the second page if the scan succesfully finds a sensor */
 // .then(res => console.log(res))
 
 
-type Plant = {
+type data = {
+  id: number
     species: string;
 }
 
-
 export default function Index() {
-
     /* so this starts plants as empty, and i can use setplants as a function to fill that plants variable*/
-const [data, setData] = useState([])
+const [data, setData] = useState([]);
 const [error, setError] = useState("");
+const [value, setValue] = useState<number | null>(null);
 
 useEffect(() => {
     async function fetchData() {
@@ -39,35 +40,71 @@ useEffect(() => {
         setData(data);
     }
     fetchData();
+
+    
 }, []);
 
     if (error == "Failed to fetch data"){
         return <text>{error}</text>
     }
 
+    const DropdownComponent = () => {
+    const renderItem = (item : data) => {
+      return (
+        <View style={styles.item}>
+          <Text style={styles.textItem}>{item.species}</Text>
+          
+        </View>
+      );
+    };
+
+    return (
+      <Dropdown
+        style={styles.dropdown}
+        placeholderStyle={styles.placeholderStyle}
+        selectedTextStyle={styles.selectedTextStyle}
+        inputSearchStyle={styles.inputSearchStyle}
+        iconStyle={styles.iconStyle}
+        containerStyle={styles.dropdownMenu}
+        data={data}
+        search
+        maxHeight={300}
+        labelField="species"
+        valueField="id"
+        placeholder="Select plant"
+        searchPlaceholder="Search..."
+        value={value}
+        onChange={item => {
+          setValue(item.id);
+        }}
+        renderLeftIcon={() => (
+          <Entypo style={styles.icon} name="leaf" color='#137100ff' size={20}  />
+        )}
+        renderItem={renderItem}
+      />
+    );
+  };
+
+  
 
 
   return (
-    
     <View style={styles.container}>
+      
+      <Text style={[styles.title]}>Which plant is this sensor for</Text>
 
+      
 
-        <Image
-              style={styles.image}
-              source={require('../../assets/images/tick.png')}
-              contentFit="contain"
-              />
-        <Text style={[styles.title]}>Which plant is this sensor for</Text>
+      <View>
+        <DropdownComponent/>
+      </View>
 
-        <Text style={[styles.text, styles.subtitle]}>Select an existing plant.</Text>
-
-         <Link href={"/eight_plant_select"} asChild>
-            <Pressable style={styles.button}>
-                <Text style={styles.buttonText}>Continue</Text>
-              </Pressable>
-              </Link>
-        
-        </View>
+      <Link href={"/eight_plant_select"} asChild>
+        <Pressable style={styles.button}>
+          <Text style={styles.buttonText}>Continue</Text>
+        </Pressable>
+      </Link>
+    </View>
   );
 }
 
@@ -81,7 +118,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  
+  dropdownMenu: {
+    borderRadius: 12,
+    borderWidth: 1,
+    paddingVertical: 8,
+  },
 
   text:{
     color: '#707B81',
@@ -90,10 +131,11 @@ const styles = StyleSheet.create({
   title:{
     fontSize: 26,
     fontWeight: '700',
-    marginBottom: 17,
-    maxWidth: 200,
+    marginBottom: 8,
+    maxWidth: 270,
     textAlign: 'center',
     color: '#006838',
+    marginTop: -120,
   },
 
   subtitle:{
@@ -120,13 +162,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
   },
-
-  icon: {
-    width: 27,
-    height: 27,
-    marginRight: 10,
-    marginBottom: 10,
-},
 
   wrapper:{
     width: 220,
@@ -157,5 +192,59 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#ffffff',
     fontWeight: '500'
+  },
+
+  dropdown: {
+    margin: 16,
+    height: 50, 
+    width: 300,
+    backgroundColor: 'white',
+    borderRadius: 100,
+    padding: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
+  },
+
+  icon: {
+    marginRight: 5,
+  },
+
+  item: {
+    padding: 17,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+
+  textItem: {
+    flex: 1,
+    fontSize: 16,
+  },
+
+  placeholderStyle: {
+    fontSize: 16,
+    color: '#000000ff',
+    fontWeight: '500'
+  },
+
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+    borderRadius: 12
   },
 });
